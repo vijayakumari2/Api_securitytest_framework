@@ -14,11 +14,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Pull OWASP ZAP Docker Image
-        run: docker pull owasp/zap2docker-stable
+        run: docker pull zaproxy/zap-stable
 
       - name: Run ZAP Scan
         run: |
-          docker run -v $(pwd):/zap/wrk/:rw owasp/zap2docker-stable zap-full-scan.py \
+          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-full-scan.py \
           -t http://localhost:3000 -r zap_scan_report.html
 
       - name: Upload ZAP Scan Report
