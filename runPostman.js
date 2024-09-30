@@ -6,7 +6,7 @@ const collectionFile = '4532654-79c463b2-9f60-4062-831a-786c2f097ab7';
 const environmentFile = '4532654-34f35f95-df4d-494b-ac47-21b4791d7883';
 
 // Define your API key
-const apiKey = process.env.API_KEY; // Ensure to set this environment variable
+const apiKey = 'PMAK-66f123d936c09100010e630b-3daeba718f17494901163817cf0cf613ed'; // Ensure to set this environment variable
 
 try {
     // Log in using the API key
