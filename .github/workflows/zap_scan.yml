@@ -19,7 +19,7 @@ jobs:
       - name: Run ZAP Scan
         run: |
           docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-full-scan.py \
-          -t https://www.hackthebox.com/ -r zap_scan_report.html
+          -t https://www.google.com/ -r zap_scan_report.html
 
       - name: Upload ZAP Scan Report
         uses: actions/upload-artifact@v4
