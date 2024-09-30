@@ -11,7 +11,7 @@ const apiKey = 'PMAK-66f123d936c09100010e630b-3daeba718f17494901163817cf0cf613ed
 try {
     // Log in using the API key
     console.log('Logging into Postman...');
-    execSync(`postman login --with-api-key ${apiKey}`, { stdio: 'inherit' });
+    execSync(`postman login --with-api-key ${apiKey}`);
 
     // Run Postman CLI to execute the collection
     console.log('Running Postman collection...');
