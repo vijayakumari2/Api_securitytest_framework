@@ -8,7 +8,7 @@ jobs:
 
     steps:
     - name: Check out repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Node.js environment
       uses: actions/setup-node@v2
@@ -16,22 +16,15 @@ jobs:
         node-version: '14'
 
     - name: Install Postman CLI
-      run:  npm install -g postman
+      run:  |
+          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+          echo "🤖 Verifying Postman CLI install.."
 
-    - name: Check Postman CLI Path
-      run: which postman 
-
-    - name: Debug npm global root
-      run: npm root -g
-
-    - name: Run Postman CLI with full path
-      run:  ls -la $(npm root -g)/postman-cli
-        
-
-    - name: Verify Postman CLI installation
-      run: npx postman-cli --version
-
-
+    - name: Verify Postman CLI install
+      run: |
+          postman -v
+          echo "💯 Postman CLI installed."
+          
     - name: Pull OWASP ZAP Docker Image
       run: docker pull zaproxy/zap-stable
 
