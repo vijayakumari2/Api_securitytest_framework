@@ -18,7 +18,21 @@ jobs:
     - name: Install Postman CLI
       run: npm install -g postman-cli
 
+    - name: Pull OWASP ZAP Docker Image
+      run: docker pull zaproxy/zap-stable
+
     - name: Run combined script
       run: |
         chmod +x runAndScan.sh
-        ./runAndScan.sh
+        ./runAndScan.sh 
+        
+    - name: Run ZAP Scan
+      run: |
+          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-full-scan.py \
+          -t https://www.google.com/ -r zap_scan_report.html
+        
+    - name: Upload ZAP Scan Report
+      uses: actions/upload-artifact@v4
+      with:
+          name: ZAP Report
+          path: zap_scan_report.html
