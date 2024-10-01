@@ -15,7 +15,7 @@ try {
      console.log('Login successfull...');
     // Run Postman CLI to execute the collection
     console.log('Running Postman collection...');
-    execSync(`postman collection run ${collectionFile} -e ${environmentFile}`);
+    execSync(`postman collection run ${collectionFile} -e ${environmentFile}`, { stdio: 'inherit' });
 
     console.log('Postman collection executed successfully.');
 
