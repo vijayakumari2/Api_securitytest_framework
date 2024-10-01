@@ -16,8 +16,9 @@ jobs:
         node-version: '14'
 
     - name: Install Postman CLI
-      run: npm install -g postman-cli@latest
-           echo "::add-path::$(npm root -g)/.bin"
+      run:  |
+        npm install -g postman-cli@latest
+        echo "::add-path::$(npm root -g)/.bin"
 
     - name: Verify Postman CLI installation
       run: ./node_modules/.bin/postman --version
