@@ -16,11 +16,10 @@ jobs:
         node-version: '14'
 
     - name: Install Postman CLI
-      run:  |
-        npm install -g postman-cli@latest
-        echo "$(npm root -g)/.bin" >> $GITHUB_PATH
-        export PATH=$PATH:$(npm root -g)/.bin
-        # postman --version  # Verify if Postman CLI is available
+      run:  npm install -g postman
+
+    - name: Check Postman CLI Path
+      run: which postman 
 
     - name: Debug npm global root
       run: npm root -g
