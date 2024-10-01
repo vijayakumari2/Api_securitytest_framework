@@ -2,8 +2,8 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 
 // Define paths for the Postman collection and environment
-const collectionFile = 'path/to/your/collection.json';
-const environmentFile = 'path/to/your/environment.json';
+const collectionFile = '4532654-79c463b2-9f60-4062-831a-786c2f097ab7';
+const environmentFile = '4532654-34f35f95-df4d-494b-ac47-21b4791d7883';
 
 // Define your API key (consider using environment variables instead of hardcoding)
 const apiKey ='PMAK-66f123d936c09100010e630b-3daeba718f17494901163817cf0cf613ed';
