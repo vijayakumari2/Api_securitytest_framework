@@ -18,6 +18,10 @@ jobs:
     - name: Install Postman CLI
       run: npm install -g postman-cli@latest
 
+    - name: Verify Postman CLI installation
+      run: postman --version
+
+
     - name: Pull OWASP ZAP Docker Image
       run: docker pull zaproxy/zap-stable
 
