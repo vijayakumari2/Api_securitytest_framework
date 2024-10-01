@@ -21,7 +21,7 @@ jobs:
         echo "$(npm root -g)/.bin" >> $GITHUB_PATH
 
     - name: Verify Postman CLI installation
-      run: ./node_modules/.bin/postman --version
+      run: postman --version
 
 
     - name: Pull OWASP ZAP Docker Image
