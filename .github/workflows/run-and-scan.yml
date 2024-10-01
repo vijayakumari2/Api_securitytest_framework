@@ -16,7 +16,7 @@ jobs:
         node-version: '14'
 
     - name: Install Postman CLI
-      run: npm install -g postman-cli
+      run: npm install -g postman-cli@latest
 
     - name: Pull OWASP ZAP Docker Image
       run: docker pull zaproxy/zap-stable
@@ -28,11 +28,11 @@ jobs:
         
     - name: Run ZAP Scan
       run: |
-          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-full-scan.py \
-          -t https://www.google.com/ -r zap_scan_report.html
+        docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-full-scan.py \
+        -t https://www.google.com/ -r zap_scan_report.html
         
     - name: Upload ZAP Scan Report
       uses: actions/upload-artifact@v4
       with:
-          name: ZAP Report
-          path: zap_scan_report.html
+        name: ZAP Report
+        path: zap_scan_report.html
