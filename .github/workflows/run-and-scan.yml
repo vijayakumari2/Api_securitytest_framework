@@ -26,10 +26,12 @@ jobs:
       run: npm root -g
 
     - name: Run Postman CLI with full path
-      run: $(npm root -g)/postman-cli/bin/postman --version
+      run:|
+        ls -la $(npm root -g)
+        
 
     - name: Verify Postman CLI installation
-      run: npx postman --version
+      run: npx postman-cli --version
 
 
     - name: Pull OWASP ZAP Docker Image
