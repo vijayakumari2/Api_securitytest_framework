@@ -2,24 +2,24 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 
 // Define paths for the Postman collection and environment
-const collectionFile = '4532654-79c463b2-9f60-4062-831a-786c2f097ab7';
-const environmentFile = '4532654-34f35f95-df4d-494b-ac47-21b4791d7883';
+const collectionFile = 'path/to/your/collection.json';
+const environmentFile = 'path/to/your/environment.json';
 
-// Define your API key
-const apiKey = 'PMAK-66f123d936c09100010e630b-3daeba718f17494901163817cf0cf613ed'; // This is for direct assignment; consider using an environment variable instead
+// Define your API key (consider using environment variables instead of hardcoding)
+const apiKey ='PMAK-66f123d936c09100010e630b-3daeba718f17494901163817cf0cf613ed';
 
 try {
     // Log in using the API key
     console.log('Logging into Postman...');
-    execSync(`postman login --with-api-key ${apiKey}`);
+    execSync(`postman login --with-api-key ${apiKey}`, { stdio: 'inherit' });
 
     // Run Postman CLI to execute the collection
     console.log('Running Postman collection...');
-    execSync(`postman collection run ${collectionFile} -e ${environmentFile}`);
+    execSync(`postman collection run ${collectionFile} -e ${environmentFile}`, { stdio: 'inherit' });
 
     console.log('Postman collection executed successfully.');
 
-    // Read the collection file and extract base URLs
+    // Extract base URLs from the collection file
     console.log('Extracting base URLs from the collection...');
     const collection = JSON.parse(fs.readFileSync(collectionFile, 'utf8'));
     const baseUrls = new Set();
