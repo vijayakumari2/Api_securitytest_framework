@@ -16,7 +16,7 @@ jobs:
       - name: Run ZAP Scan
         run: |
           docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-full-scan.py \
-          -t https://app.qa.az.memcrypt.io/ -r zap_scan_report.html
+          -t https://app.qa.az.memcrypt.io/ 
 
       - name: Upload ZAP Scan Report
         uses: actions/upload-artifact@v4
