@@ -1,45 +1,45 @@
-name: Run Postman and ZAP Scan
+# name: Run Postman and ZAP Scan
 
-on: [push]
+# on: [push]
 
-jobs:
-  run-test-and-scan:
-    runs-on: ubuntu-latest
+# jobs:
+#   run-test-and-scan:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: Check out repository
-      uses: actions/checkout@v3
+#     steps:
+#     - name: Check out repository
+#       uses: actions/checkout@v3
 
-    - name: Set up Node.js environment
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
+#     - name: Set up Node.js environment
+#       uses: actions/setup-node@v2
+#       with:
+#         node-version: '14'
 
-    - name: Install Postman CLI
-      run:  |
-          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
-          echo "🤖 Verifying Postman CLI install.."
+#     - name: Install Postman CLI
+#       run:  |
+#           curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+#           echo "🤖 Verifying Postman CLI install.."
 
-    - name: Verify Postman CLI install
-      run: |
-          postman -v
-          echo "💯 Postman CLI installed."
+#     - name: Verify Postman CLI install
+#       run: |
+#           postman -v
+#           echo "💯 Postman CLI installed."
           
-    - name: Pull OWASP ZAP Docker Image
-      run: docker pull zaproxy/zap-stable
+    # - name: Pull OWASP ZAP Docker Image
+    #   run: docker pull zaproxy/zap-stable
 
-    - name: Run combined script
-      run: |
-        chmod +x runAndScan.sh
-        ./runAndScan.sh 
+    # - name: Run combined script
+    #   run: |
+    #     chmod +x runAndScan.sh
+    #     ./runAndScan.sh 
         
-    - name: Run ZAP Scan
-      run: |
-        docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-full-scan.py \
-        -t https://www.google.com/ -r zap_scan_report.html
+    # - name: Run ZAP Scan
+    #   run: |
+    #     docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-full-scan.py \
+    #     -t https://www.google.com/ -r zap_scan_report.html
         
-    - name: Upload ZAP Scan Report
-      uses: actions/upload-artifact@v4
-      with:
-        name: ZAP Report
-        path: zap_scan_report.html
+    # - name: Upload ZAP Scan Report
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: ZAP Report
+    #     path: zap_scan_report.html
