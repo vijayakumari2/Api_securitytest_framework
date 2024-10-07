@@ -1,27 +1,28 @@
-# name: OWASP ZAP Scan
+name: OWASP ZAP Scan
 
-# on:
-#   push:
-#     branches:
-     
-# jobs:
-#   zap_scan:
-#     runs-on: ubuntu-latest
+on:
+  push:
+    branches:
+     -main
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - name: Checkout Code
-#         uses: actions/checkout@v2
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-#       - name: Pull OWASP ZAP Docker Image
-#         run: docker pull zaproxy/zap-stable
+      - name: Pull OWASP ZAP Docker Image
+        run: docker pull zaproxy/zap-stable
 
-#       - name: Run ZAP Scan
-#         run: |
-#           docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-full-scan.py \
-#           -t https://www.google.com/ -r zap_scan_report.html
+      - name: Run ZAP Scan
+        run: |
+          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-full-scan.py \
+          -t https://app.qa.az.memcrypt.io/ -r zap_scan_report.html
 
-#       - name: Upload ZAP Scan Report
-#         uses: actions/upload-artifact@v4
-#         with:
-#           name: ZAP Report
-#           path: zap_scan_report.html
+      - name: Upload ZAP Scan Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZAP Report
+          path: zap_scan_report.html
+
