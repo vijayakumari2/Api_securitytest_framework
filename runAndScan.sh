@@ -16,19 +16,5 @@ sleep 10
 #     curl "http://localhost:8080/JSON/ascan/action/scan/?url=$URL&apikey=critgiiksqvdcmb9jou3i2akl3"
 # done < base-urls.txt 
 
-- name: Run ZAP scan
-  run: |
-         docker exec zap zap-cli quick-scan --self-contained --start-options '-config api.disablekey=true' https://app.qa.az.memcrypt.io/
+docker exec zap zap-cli quick-scan --self-contained --start-options '-config api.disablekey=true' https://app.qa.az.memcrypt.io/
 
-      # Step 5: Generate and save the ZAP report (HTML format)
- - name: Generate ZAP report
-   run: |
-        docker exec zap zap-cli report -o zap_report.html -f html
-        continue-on-error: true
-
-      # Step 6: Upload the ZAP report as an artifact
-  - name: Upload ZAP report
-    uses: actions/upload-artifact@v3
-    with:
-        name: zap-report
-        path: zap_report.html
