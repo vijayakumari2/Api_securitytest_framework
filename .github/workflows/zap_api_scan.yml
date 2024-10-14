@@ -17,7 +17,7 @@ jobs:
         run: chmod -R 777 $(pwd)
 
       - name: Clean up existing report
-        run: rm -f zap-report.html
+        run: rm -f zap-report/*.html
 
       - name: Run ZAP Scan Using OpenAPI Spec
         run:   |
@@ -36,20 +36,8 @@ jobs:
       - name: List files in working directory
         run: ls -la  
 
-      - name: Upload ZAP Scan Report
+      - name: Upload All ZAP Reports
         uses: actions/upload-artifact@v4
         with:
-          name: ZAP Report API Spec
-          path: zap-report-api.html
-          
-      - name: Upload ZAP Scan Report for Endpoints
-        uses: actions/upload-artifact@v4
-        with:
-          name: ZAP Report API Endpoints
-          path: zap-report-api-endpoints.html
-          
-      - name: Upload ZAP Scan Report for Agent Binary API
-        uses: actions/upload-artifact@v4
-        with:
-          name: ZAP Report Agent Binary
-          path: zap-report-agentbinary.html
+          name: ZAP Reports
+          path: reports/
