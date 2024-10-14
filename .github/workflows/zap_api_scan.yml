@@ -34,6 +34,9 @@ jobs:
           docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
           -t https://api.qa.az.memcrypt.io/agentbinary/openapi.json -f openapi \
           -r zap-report-agentbinary.html || true
+
+      - name: Move ZAP reports to reports directory
+        run: mv zap-report*.html reports/    
           
       - name: List files in working directory
         run: ls -la reports
