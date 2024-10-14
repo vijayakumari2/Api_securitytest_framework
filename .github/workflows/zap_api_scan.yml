@@ -24,7 +24,7 @@ jobs:
       - name: Run ZAP Scan Using OpenAPI Spec
         run:   |
           docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
-          -t https://api.qa.az.memcrypt.io  -f openapi \
+          -t https://app.qa.az.memcrypt.io  -f openapi \
           -r zap-report.html || true
         
           docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
