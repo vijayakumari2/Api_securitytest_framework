@@ -23,12 +23,20 @@ jobs:
 
       - name: Run ZAP Scans for URLs in File
         run: |
-          # Read URLs from file and run ZAP scan on each
-          while IFS= read -r url; do
-            echo "Scanning $url"
-            docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
-            -t $url \
-            -r "zap-report-$(echo $url | sed 's/[:/.]/-/g').html" || true
+         while IFS= read -r url; do
+          if [[ "$url" == *".json" ]]; then
+            format="openapi"
+          elif [[ "$url" == *"graphql"* ]]; then
+            format="graphql"
+          else
+          format="soap"  # Default to SOAP if neither condition matches
+          fi
+    
+          echo "Scanning $url with inferred format $format"
+          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
+          -t $url \
+          -f $format \
+          -r "zap-report-$(echo $url | sed 's/[:/.]/-/g').html" || true
           done < zap_urls.txt
 
       - name: Move ZAP reports to reports directory
