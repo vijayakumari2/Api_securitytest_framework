@@ -1,0 +1,48 @@
+name: OWASP ZAP Scan from the list
+
+on: [push]
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Pull OWASP ZAP Docker Image
+        run: docker pull zaproxy/zap-stable
+
+      - name: Set permissions for working directory
+        run: |
+             chmod -R 777 $(pwd)
+             mkdir -p $(pwd)/reports
+
+      - name: Clean up existing reports
+        run: rm -f zap-report*.html
+
+      - name: Run ZAP Scans for URLs in File
+        run: |
+          # Read URLs from file and run ZAP scan on each
+          while IFS= read -r url; do
+            echo "Scanning $url"
+            docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
+            -t $url \
+            -r "zap-report-$(echo $url | sed 's/[:/.]/-/g').html" || true
+          done < zap_urls.txt
+
+      - name: Move ZAP reports to reports directory
+        run: mv zap-report*.html reports/
+
+      - name: List files in reports directory
+        run: ls -la reports
+
+      - name: Upload All ZAP Reports
+        uses: actions/upload-artifact@v4
+        with:
+           name: ZAP Reports
+           path: reports/
+           if-no-files-found: warn
+           compression-level: 6
+           overwrite: false
+           include-hidden-files: false
