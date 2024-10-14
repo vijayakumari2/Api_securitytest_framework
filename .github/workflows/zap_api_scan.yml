@@ -20,15 +20,36 @@ jobs:
         run: rm -f zap-report.html
 
       - name: Run ZAP Scan Using OpenAPI Spec
-        run: |
+        run:   |
           docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
-          -t https://api.qa.az.memcrypt.io/console/openapi.json  -f openapi -r zap-report-api.html || true
-
+          -t https://api.qa.az.memcrypt.io/console/openapi.json -f openapi \
+          -r zap-report-api.html || true
+          
+          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
+          -t https://api.qa.az.memcrypt.io \
+          -r zap-report-api-endpoints.html || true
+          
+          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
+          -t https://api.qa.az.memcrypt.io/agentbinary/openapi.json -f openapi \
+          -r zap-report-agentbinary.html || true
+          
       - name: List files in working directory
         run: ls -la  
 
       - name: Upload ZAP Scan Report
         uses: actions/upload-artifact@v4
         with:
-          name: ZAP Report
+          name: ZAP Report API Spec
           path: zap-report-api.html
+          
+      - name: Upload ZAP Scan Report for Endpoints
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZAP Report API Endpoints
+          path: zap-report-api-endpoints.html
+          
+      - name: Upload ZAP Scan Report for Agent Binary API
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZAP Report Agent Binary
+          path: zap-report-agentbinary.html
