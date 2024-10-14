@@ -23,7 +23,7 @@ jobs:
         run:   |
           docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
           -t https://api.qa.az.memcrypt.io \
-          -r zap-report-api-endpoints.html || true
+          -r zap-report.html || true
         
           docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
           -t https://api.qa.az.memcrypt.io/console/openapi.json -f openapi \
