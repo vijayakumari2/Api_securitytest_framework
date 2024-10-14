@@ -22,7 +22,7 @@ jobs:
       - name: Run ZAP Scan Using OpenAPI Spec
         run: |
           docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
-          -t https://api.qa.az.memcrypt.io/console/openapi.json  -f openapi -r zap-report.html || true
+          -t https://api.qa.az.memcrypt.io/console/openapi.json  -f openapi -r zap-report-api.html || true
 
       - name: List files in working directory
         run: ls -la  
@@ -31,4 +31,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ZAP Report
-          path: zap-report.html
+          path: zap-report-api.html
