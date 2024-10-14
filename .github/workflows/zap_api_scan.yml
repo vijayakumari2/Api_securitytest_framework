@@ -1,0 +1,34 @@
+name: OWASP ZAP API Scan
+
+on: [push]
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Pull OWASP ZAP Docker Image
+        run: docker pull zaproxy/zap-stable
+
+      - name: Set permissions for working directory
+        run: chmod -R 777 $(pwd)
+
+      - name: Clean up existing report
+        run: rm -f zap-report.html
+
+      - name: Run ZAP Scan Using OpenAPI Spec
+        run: |
+          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
+          -t https://api.qa.az.memcrypt.io/console/openapi.json -r zap-report.html || true
+
+      - name: List files in working directory
+        run: ls -la  
+
+      - name: Upload ZAP Scan Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZAP Report
+          path: zap-report.html
