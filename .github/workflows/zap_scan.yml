@@ -1,35 +1,35 @@
-name: OWASP ZAP Scan
+# name: OWASP ZAP Scan
 
-on: [push] 
+# on: [push] 
 
-jobs:
-  zap_scan:
-    runs-on: ubuntu-latest
+# jobs:
+#   zap_scan:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v2
 
-      - name: Pull OWASP ZAP Docker Image
-        run: docker pull zaproxy/zap-stable
+#       - name: Pull OWASP ZAP Docker Image
+#         run: docker pull zaproxy/zap-stable
 
-      - name: Set permissions for working directory
-        run: chmod -R 777 $(pwd)
+#       - name: Set permissions for working directory
+#         run: chmod -R 777 $(pwd)
 
-      - name: Clean up existing report
-        run: rm -f zap-report.html
+#       - name: Clean up existing report
+#         run: rm -f zap-report.html
 
-      - name: Run ZAP Scan
-        run: |
-          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-full-scan.py \
-          -t https://app.qa.az.memcrypt.io/ -r zap-report.html || true
+#       - name: Run ZAP Scan
+#         run: |
+#           docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-full-scan.py \
+#           -t https://app.qa.az.memcrypt.io/ -r zap-report.html || true
 
-      - name: List files in working directory
-        run: ls -la  
+#       - name: List files in working directory
+#         run: ls -la  
 
-      - name: Upload ZAP Scan Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: ZAP Report
-          path: zap-report.html
+#       - name: Upload ZAP Scan Report
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: ZAP Report
+#           path: zap-report.html
 
