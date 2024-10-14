@@ -22,13 +22,13 @@ jobs:
       - name: Run ZAP Scan Using OpenAPI Spec
         run:   |
           docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
-          -t https://api.qa.az.memcrypt.io/console/openapi.json -f openapi \
-          -r zap-report-api.html || true
-          
-          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
           -t https://api.qa.az.memcrypt.io \
           -r zap-report-api-endpoints.html || true
-          
+        
+          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
+          -t https://api.qa.az.memcrypt.io/console/openapi.json -f openapi \
+          -r zap-report-api.html || true
+                  
           docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
           -t https://api.qa.az.memcrypt.io/agentbinary/openapi.json -f openapi \
           -r zap-report-agentbinary.html || true
@@ -39,5 +39,9 @@ jobs:
       - name: Upload All ZAP Reports
         uses: actions/upload-artifact@v4
         with:
-          name: ZAP Reports
-          path: reports/
+           name: ZAP Reports
+           path: zap-report/*.html   
+           if-no-files-found: warn
+           compression-level: 6
+           overwrite: false
+           include-hidden-files: false
