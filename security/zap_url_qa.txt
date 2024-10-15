@@ -1,0 +1,6 @@
+https://app.qa.az.memcrypt.io
+https://api.qa.az.memcrypt.io/console/openapi.json
+https://api.qa.az.memcrypt.io/console/docs
+https://api.qa.az.memcrypt.io/agentbinary/openapi.json
+https://api.qa.az.memcrypt.io/agentbinary/docs
+https://idp.snbx.az.memcrypt.io
