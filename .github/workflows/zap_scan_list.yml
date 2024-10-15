@@ -26,9 +26,9 @@ jobs:
       - name: Run ZAP Scans for URLs in File
         run: |
          if [[ "$ENVIRONMENT" == "qa" ]]; then
-            URL_FILE="security/zap_urls_qa.txt"
+            URL_FILE="security/zap_url_qa.txt"
           elif [[ "$ENVIRONMENT" == "sandbox" ]]; then
-            URL_FILE="security/zap_urls_sandbox.txt"
+            URL_FILE="security/zap_url_sandbox.txt"
           else
             echo "Invalid environment specified: $ENVIRONMENT"
             exit 1
