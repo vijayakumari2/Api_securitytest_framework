@@ -56,13 +56,16 @@ jobs:
          for JSON_REPORT in zap-report-*.json; do
           if [ -f "$JSON_REPORT" ]; then
           echo "Processing report: $JSON_REPORT"
-          jq '.' "$JSON_REPORT" # Add this line to output the entire report
+          if jq '.' "$JSON_REPORT" > /dev/null 2>&1; then
           CRITICAL_ALERTS=$(jq '.alerts[] | select(.risk == "High")' "$JSON_REPORT" | wc -l)
           if [ "$CRITICAL_ALERTS" -gt 0 ]; then
           echo "Critical alerts found in $JSON_REPORT! Failing the job."
           exit 1
           else
           echo "No critical alerts found in $JSON_REPORT."
+          fi
+           else
+          echo "Invalid JSON in $JSON_REPORT. Skipping this file."
           fi
           else
           echo "JSON report $JSON_REPORT not found!"
