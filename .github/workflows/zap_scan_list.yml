@@ -47,9 +47,27 @@ jobs:
           docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
           -t $url \
           -f $format \
-          -r "zap-report-$(echo $url | sed 's/[:/.]/-/g').html" || true
+          -r "zap-report-$(echo $url | sed 's/[:/.]/-/g').html" \
+          -x "zap-report-$(echo $url | sed 's/[:/.]/-/g').json" || true
           done < "$URL_FILE"
 
+      - name: Check for Critical Alerts
+        run: |
+          # Loop through each generated JSON report
+          for JSON_REPORT in zap-report-*.json; do
+            if [ -f "$JSON_REPORT" ]; then
+              CRITICAL_ALERTS=$(jq '.alerts[] | select(.risk == "High")' "$JSON_REPORT" | wc -l)
+              if [ "$CRITICAL_ALERTS" -gt 0 ]; then
+                echo "Critical alerts found in $JSON_REPORT! Failing the job."
+                exit 1
+              else
+                echo "No critical alerts found in $JSON_REPORT."
+              fi
+            else
+              echo "JSON report $JSON_REPORT not found!"
+            fi
+          done
+          
       - name: Move ZAP reports to reports directory
         run: mv zap-report*.html reports/
 
