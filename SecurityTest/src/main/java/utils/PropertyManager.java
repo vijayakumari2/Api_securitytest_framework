@@ -13,7 +13,7 @@ public class PropertyManager {
             prop = new Properties();
             envProp = new Properties();
             try {
-                File directoryPath = new File(System.getProperty("user.dir")+"/src/test/resources/properties");
+                File directoryPath = new File(System.getProperty("user.dir")+"SecurityTest/src/test/resources/properties");
                 if (directoryPath.exists() && directoryPath.isDirectory()) {
                     File[] filesList = directoryPath.listFiles();
 
