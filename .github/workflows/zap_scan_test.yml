@@ -46,7 +46,7 @@ jobs:
         run: rm -f zap-report*.html
 
       - name: Run ZAP Scans for URLs in File
-        run:
+        run: |
           while IFS= read -r url; do
           if [[ "$url" == *".json" ]]; then
           format="openapi"
