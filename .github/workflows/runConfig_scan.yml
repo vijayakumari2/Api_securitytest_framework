@@ -14,14 +14,18 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'temurin'  # Specify the JDK distribution here
-          architecture: 'x64'
+          distribution: 'temurin'  # Specify the JDK distribution
 
-      - name: Download TestNG JAR
+      - name: Download TestNG and JCommander JARs
         run: |
+          mkdir -p lib
           wget https://repo1.maven.org/maven2/org/testng/testng/7.7.0/testng-7.7.0.jar -P lib
+          wget https://repo1.maven.org/maven2/com/beust/jcommander/1.81/jcommander-1.81.jar -P lib
 
-      - name: Compile and Run Tests
+      - name: Compile Java Files
         run: |
-          javac -cp "lib/testng-7.7.0.jar:SecurityTest/src/main/java:bin" -d bin SecurityTest/src/main/java/utils/*.java SecurityTest/src/test/java/runner/*.java &&
-          java -cp "lib/testng-7.7.0.jar:bin" org.testng.TestNG testng.xml
+          javac -cp "lib/testng-7.7.0.jar:lib/jcommander-1.81.jar:SecurityTest/src/main/java:bin" -d bin SecurityTest/src/main/java/utils/*.java SecurityTest/src/test/java/runner/*.java
+
+      - name: Run Tests
+        run: |
+          java -cp "lib/testng-7.7.0.jar:lib/jcommander-1.81.jar:bin" org.testng.TestNG testng.xml
