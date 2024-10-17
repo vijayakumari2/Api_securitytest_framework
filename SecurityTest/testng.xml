@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="PropertyManagerSuite">
+    <test name="runner.ConfigReader">
+        <classes>
+            <class name="runner.ConfigReader"/>
+        </classes>
+    </test>
+</suite>
