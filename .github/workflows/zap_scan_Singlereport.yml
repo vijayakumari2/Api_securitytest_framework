@@ -49,7 +49,7 @@ jobs:
         run: |
           report_file="zap-report.html"  
           > "$report_file" 
-        
+          
           total_high=0
           total_medium=0
           total_low=0
@@ -74,6 +74,13 @@ jobs:
               -f "$format" \
               -r "$temp_report" || true
             
+            # Debug: Check if the report was created
+            if [ -f "$temp_report" ]; then
+                echo "$temp_report was created."
+            else
+                echo "Failed to create $temp_report."
+            fi
+            
             high_count=$(grep -o 'High' "$temp_report" | wc -l)
             medium_count=$(grep -o 'Medium' "$temp_report" | wc -l)
             low_count=$(grep -o 'Low' "$temp_report" | wc -l)
@@ -96,9 +103,11 @@ jobs:
           echo "<p>Medium Risks: $total_medium</p>" >> "$report_file"
           echo "<p>Low Risks: $total_low</p>" >> "$report_file"
 
+      - name: Move ZAP reports to reports directory
+        run: mv zap-report*.html reports/
 
       - name: List files in reports directory
-        run: ls -la reports
+        run: ls -la reports/
 
       - name: Upload All ZAP Reports
         uses: actions/upload-artifact@v4
