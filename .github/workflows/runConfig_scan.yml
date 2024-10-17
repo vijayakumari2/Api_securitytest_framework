@@ -29,7 +29,7 @@ jobs:
         run: |
           javac -cp "lib/testng-7.7.0.jar:lib/jcommander-1.81.jar:lib/slf4j-api-1.7.36.jar:lib/slf4j-simple-1.7.36.jar:SecurityTest/src/main/java:bin" -d bin SecurityTest/src/main/java/utils/*.java SecurityTest/src/test/java/runner/*.java
           java -cp "lib/testng-7.7.0.jar:lib/jcommander-1.81.jar:lib/slf4j-api-1.7.36.jar:lib/slf4j-simple-1.7.36.jar:bin" org.testng.TestNG SecurityTest/testng.xml
-          cat Securitytest/assets/Zap_urls.txt
+          cat /Securitytest/assets/Zap_urls.txt
           
       # - name: Compile Java Files
       #   run: |
