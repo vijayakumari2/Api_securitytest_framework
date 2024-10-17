@@ -31,4 +31,4 @@ jobs:
 
       - name: Run Tests
         run: |
-          java -cp "lib/testng-7.7.0.jar:lib/jcommander-1.81.jar:lib/slf4j-api-1.7.36.jar:lib/slf4j-simple-1.7.36.jar:bin" org.testng.TestNG testng.xml
+          java -cp "lib/testng-7.7.0.jar:lib/jcommander-1.81.jar:lib/slf4j-api-1.7.36.jar:lib/slf4j-simple-1.7.36.jar:bin" org.testng.TestNG SecurityTest/testng.xml
