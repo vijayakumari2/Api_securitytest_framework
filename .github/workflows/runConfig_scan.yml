@@ -1,25 +1,25 @@
-name: Run Tests
-
-on: [push]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          java-version: '17'
-
-      - name: Download TestNG JAR
-        run: |
-          wget https://repo1.maven.org/maven2/org/testng/testng/7.7.0/testng-7.7.0.jar -P lib
-
-      - name: Compile and Run Tests
-        run: |
-          javac -cp "lib/testng-7.7.0.jar:src/main/java:bin" -d bin src/main/java/utils/*.java src/test/java/runner/*.java &&
-          java -cp "lib/testng-7.7.0.jar:bin" org.testng.TestNG testng.xml
+#name: Run Tests
+#
+#on: [push]
+#
+#jobs:
+#  test:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#
+#      - name: Set up JDK
+#        uses: actions/setup-java@v2
+#        with:
+#          java-version: '17'
+#
+#      - name: Download TestNG JAR
+#        run: |
+#          wget https://repo1.maven.org/maven2/org/testng/testng/7.7.0/testng-7.7.0.jar -P lib
+#
+#      - name: Compile and Run Tests
+#        run: |
+#          javac -cp "lib/testng-7.7.0.jar:src/main/java:bin" -d bin src/main/java/utils/*.java src/test/java/runner/*.java &&
+#          java -cp "lib/testng-7.7.0.jar:bin" org.testng.TestNG testng.xml

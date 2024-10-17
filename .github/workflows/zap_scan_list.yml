@@ -1,89 +1,89 @@
-name: OWASP ZAP Scan from the list
-
-on: [push]
-
-jobs:
-  zap_scan:
-    runs-on: ubuntu-latest
-    env:
-      ENVIRONMENT: qa 
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: Pull OWASP ZAP Docker Image
-        run: docker pull zaproxy/zap-stable
-
-      - name: Set permissions for working directory
-        run: |
-             chmod -R 777 $(pwd)
-             mkdir -p $(pwd)/reports
-
-      - name: Clean up existing reports
-        run: rm -f zap-report*.html
-
-      - name: Run ZAP Scans for URLs in File
-        run: |
-         if [[ "$ENVIRONMENT" == "qa" ]]; then
-            URL_FILE="security/zap_url_qa.txt"
-          elif [[ "$ENVIRONMENT" == "sandbox" ]]; then
-            URL_FILE="security/zap_url_sandbox.txt"
-          else
-            echo "Invalid environment specified: $ENVIRONMENT"
-            exit 1
-          fi
-          
-         while IFS= read -r url; do
-          if [[ "$url" == *".json" ]]; then
-            format="openapi"
-          elif [[ "$url" == *"graphql"* ]]; then
-            format="graphql"
-          else
-          format="soap"  
-          fi
-    
-          echo "Scanning $url with inferred format $format"
-          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
-          -t $url \
-          -f $format \
-          -r "zap-report-$(echo $url | sed 's/[:/.]/-/g').html" \
-          -x "zap-report-$(echo $url | sed 's/[:/.]/-/g').json" || true
-          done < "$URL_FILE"
-
-      - name: Check for Critical Alerts
-        run: |
-         for HTML_REPORT in zap-report-*.html; do
-         if [ -f "$HTML_REPORT" ]; then
-         echo "Processing report: $HTML_REPORT"
-    
-         HIGH_ALERTS=$(grep -o "High" "$HTML_REPORT" | wc -l)
-
-          if [ "$HIGH_ALERTS" -gt 0 ]; then
-            echo "High alerts found in $HTML_REPORT!"
-            echo "Listing the alerts:"
-            
-            grep -A 10 "High" "$HTML_REPORT" 
-          else
-            echo "No high alerts found in $HTML_REPORT."
-          fi
-         else
-            echo "HTML report $HTML_REPORT not found!"
-          fi
-         done
-          
-      - name: Move ZAP reports to reports directory
-        run: mv zap-report*.html reports/
-
-      - name: List files in reports directory
-        run: ls -la reports
-
-      - name: Upload All ZAP Reports
-        uses: actions/upload-artifact@v4
-        with:
-           name: ZAP Reports
-           path: reports/
-           if-no-files-found: warn
-           compression-level: 6
-           overwrite: false
-           include-hidden-files: false
+#name: OWASP ZAP Scan from the list
+#
+#on: [push]
+#
+#jobs:
+#  zap_scan:
+#    runs-on: ubuntu-latest
+#    env:
+#      ENVIRONMENT: qa
+#
+#    steps:
+#      - name: Checkout Code
+#        uses: actions/checkout@v2
+#
+#      - name: Pull OWASP ZAP Docker Image
+#        run: docker pull zaproxy/zap-stable
+#
+#      - name: Set permissions for working directory
+#        run: |
+#             chmod -R 777 $(pwd)
+#             mkdir -p $(pwd)/reports
+#
+#      - name: Clean up existing reports
+#        run: rm -f zap-report*.html
+#
+#      - name: Run ZAP Scans for URLs in File
+#        run: |
+#         if [[ "$ENVIRONMENT" == "qa" ]]; then
+#            URL_FILE="security/zap_url_qa.txt"
+#          elif [[ "$ENVIRONMENT" == "sandbox" ]]; then
+#            URL_FILE="security/zap_url_sandbox.txt"
+#          else
+#            echo "Invalid environment specified: $ENVIRONMENT"
+#            exit 1
+#          fi
+#
+#         while IFS= read -r url; do
+#          if [[ "$url" == *".json" ]]; then
+#            format="openapi"
+#          elif [[ "$url" == *"graphql"* ]]; then
+#            format="graphql"
+#          else
+#          format="soap"
+#          fi
+#
+#          echo "Scanning $url with inferred format $format"
+#          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
+#          -t $url \
+#          -f $format \
+#          -r "zap-report-$(echo $url | sed 's/[:/.]/-/g').html" \
+#          -x "zap-report-$(echo $url | sed 's/[:/.]/-/g').json" || true
+#          done < "$URL_FILE"
+#
+#      - name: Check for Critical Alerts
+#        run: |
+#         for HTML_REPORT in zap-report-*.html; do
+#         if [ -f "$HTML_REPORT" ]; then
+#         echo "Processing report: $HTML_REPORT"
+#
+#         HIGH_ALERTS=$(grep -o "High" "$HTML_REPORT" | wc -l)
+#
+#          if [ "$HIGH_ALERTS" -gt 0 ]; then
+#            echo "High alerts found in $HTML_REPORT!"
+#            echo "Listing the alerts:"
+#
+#            grep -A 10 "High" "$HTML_REPORT"
+#          else
+#            echo "No high alerts found in $HTML_REPORT."
+#          fi
+#         else
+#            echo "HTML report $HTML_REPORT not found!"
+#          fi
+#         done
+#
+#      - name: Move ZAP reports to reports directory
+#        run: mv zap-report*.html reports/
+#
+#      - name: List files in reports directory
+#        run: ls -la reports
+#
+#      - name: Upload All ZAP Reports
+#        uses: actions/upload-artifact@v4
+#        with:
+#           name: ZAP Reports
+#           path: reports/
+#           if-no-files-found: warn
+#           compression-level: 6
+#           overwrite: false
+#           include-hidden-files: false

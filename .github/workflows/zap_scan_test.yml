@@ -1,0 +1,80 @@
+name: Run Tests
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Download TestNG
+        run: |
+          mkdir -p lib
+          wget https://repo1.maven.org/maven2/org/testng/testng/7.7.0/testng-7.7.0.jar -P lib
+          wget https://repo1.maven.org/maven2/com/beust/jcommander/1.81/jcommander-1.81.jar -P lib
+          wget https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar -P lib
+          # Using SLF4J Simple instead of Log4J12
+          wget https://repo1.maven.org/maven2/org/slf4j/slf4j-simple/1.7.36/slf4j-simple-1.7.36.jar -P lib
+
+      - name: Compile and run
+        run: |
+          javac -cp "lib/testng-7.7.0.jar:lib/jcommander-1.81.jar:lib/slf4j-api-1.7.36.jar:lib/slf4j-simple-1.7.36.jar:SecurityTest/src/main/java:bin" -d bin SecurityTest/src/main/java/utils/*.java SecurityTest/src/test/java/runner/*.java
+          java -cp "lib/testng-7.7.0.jar:lib/jcommander-1.81.jar:lib/slf4j-api-1.7.36.jar:lib/slf4j-simple-1.7.36.jar:bin" org.testng.TestNG SecurityTest/testng.xml
+          cat SecurityTest/src/assets/Zap_urls.txt
+
+      - name: Pull OWASP ZAP Docker Image
+
+        run: docker pull zaproxy/zap-stable
+
+      - name: Set permissions for working directory
+
+        run: |
+          chmod -R 777 $(pwd)
+          mkdir -p $(pwd)/reports
+
+      - name: Clean up existing reports
+
+        run: rm -f zap-report*.html
+
+      - name: Run ZAP Scans for URLs in File
+        run:
+          while IFS= read -r url; do
+          if [[ "$url" == *".json" ]]; then
+          format="openapi"
+          elif [[ "$url" == *"graphql"* ]]; then
+          format="graphql"
+          else
+          format="soap"
+          fi
+        
+          echo "Scanning $url with inferred format $format"
+          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
+          -t $url \
+          -f $format \
+          -r "zap-report-$(echo $url | sed 's/[:/.]/-/g').html" || true
+          done < SecurityTest/src/assets/Zap_urls.txt
+
+      - name: Move ZAP reports to reports directory
+        run: mv zap-report*.html reports/
+
+      - name: List files in reports directory
+        run: ls -la reports
+
+      - name: Upload All ZAP Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZAP Reports
+          path: reports/
+          if-no-files-found: warn
+          compression-level: 6
+          overwrite: false
+          include-hidden-files: false

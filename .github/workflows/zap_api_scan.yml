@@ -1,52 +1,52 @@
-name: OWASP ZAP API Scan
-
-on: [push]
-
-jobs:
-  zap_scan:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: Pull OWASP ZAP Docker Image
-        run: docker pull zaproxy/zap-stable
-
-      - name: Set permissions for working directory
-        run: |
-             chmod -R 777 $(pwd)
-             mkdir -p $(pwd)/reports
-
-      - name: Clean up existing report
-        run: rm -f zap-report/*.html
-
-      - name: Run ZAP Scan Using OpenAPI Spec
-        run:   |
-          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
-          -t https://app.qa.az.memcrypt.io  -f openapi \
-          -r zap-report.html || true
-        
-          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
-          -t https://api.qa.az.memcrypt.io/console/openapi.json -f openapi \
-          -r zap-report-api.html || true
-                  
-          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
-          -t https://api.qa.az.memcrypt.io/agentbinary/openapi.json -f openapi \
-          -r zap-report-agentbinary.html || true
-
-      - name: Move ZAP reports to reports directory
-        run: mv zap-report*.html reports/    
-          
-      - name: List files in working directory
-        run: ls -la reports
-
-      - name: Upload All ZAP Reports
-        uses: actions/upload-artifact@v4
-        with:
-           name: ZAP Reports
-           path: reports/
-           if-no-files-found: warn
-           compression-level: 6
-           overwrite: false
-           include-hidden-files: false
+#name: OWASP ZAP API Scan
+#
+#on: [push]
+#
+#jobs:
+#  zap_scan:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout Code
+#        uses: actions/checkout@v2
+#
+#      - name: Pull OWASP ZAP Docker Image
+#        run: docker pull zaproxy/zap-stable
+#
+#      - name: Set permissions for working directory
+#        run: |
+#             chmod -R 777 $(pwd)
+#             mkdir -p $(pwd)/reports
+#
+#      - name: Clean up existing report
+#        run: rm -f zap-report/*.html
+#
+#      - name: Run ZAP Scan Using OpenAPI Spec
+#        run:   |
+#          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
+#          -t https://app.qa.az.memcrypt.io  -f openapi \
+#          -r zap-report.html || true
+#
+#          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
+#          -t https://api.qa.az.memcrypt.io/console/openapi.json -f openapi \
+#          -r zap-report-api.html || true
+#
+#          docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
+#          -t https://api.qa.az.memcrypt.io/agentbinary/openapi.json -f openapi \
+#          -r zap-report-agentbinary.html || true
+#
+#      - name: Move ZAP reports to reports directory
+#        run: mv zap-report*.html reports/
+#
+#      - name: List files in working directory
+#        run: ls -la reports
+#
+#      - name: Upload All ZAP Reports
+#        uses: actions/upload-artifact@v4
+#        with:
+#           name: ZAP Reports
+#           path: reports/
+#           if-no-files-found: warn
+#           compression-level: 6
+#           overwrite: false
+#           include-hidden-files: false
