@@ -20,7 +20,7 @@ public class ConfigReader {
         String keycloakUrl = configReader.getProperty("keycloakUrl");
 
         // Output file path
-        String fileName = System.getProperty("user.dir")+"SecurityTest/src/assets/Zap_urls.txt";
+        String fileName = System.getProperty("user.dir")+"/SecurityTest/src/assets/Zap_urls.txt";
 
 
         // Write properties to file
