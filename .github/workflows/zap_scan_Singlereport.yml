@@ -47,7 +47,7 @@ jobs:
 
       - name: Run ZAP Scans for URLs in File
         run: |
-          report_file="zap-report.html"  
+          report_file="index.html"  
           > "$report_file" 
                    
           while IFS= read -r url; do
@@ -62,7 +62,7 @@ jobs:
             echo "Scanning $url with inferred format $format"
             
             # Create a temporary report file for each scan
-            temp_report="zap-report-$(echo $url | sed 's/[:/.]/-/g').html"
+            temp_report="index-$(echo $url | sed 's/[:/.]/-/g').html"
             
             # Run the ZAP scan
             docker run -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-api-scan.py \
@@ -84,7 +84,7 @@ jobs:
             # Optionally, delete the temporary report after appending
             rm "$temp_report"
           done < SecurityTest/src/assets/Zap_urls.txt
-
+          mv index.html reports/
       - name: Upload All ZAP Reports
         uses: actions/upload-artifact@v4
         with:
