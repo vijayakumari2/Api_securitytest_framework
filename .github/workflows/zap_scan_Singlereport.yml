@@ -49,9 +49,7 @@ jobs:
         run: |
           report_file="zap-report.html"  
           > "$report_file" 
-          
-         
-          
+                   
           while IFS= read -r url; do
             if [[ "$url" == *".json" ]]; then
               format="openapi"
@@ -78,8 +76,7 @@ jobs:
             else
                 echo "Failed to create $temp_report."
             fi
-            
-                       
+                                 
             echo "<hr>" >> "$report_file" # Optional: Add a separator between reports
             echo "<h2>Report for $url</h2>" >> "$report_file" # Title for each URL
             cat "$temp_report" >> "$report_file"
@@ -87,18 +84,6 @@ jobs:
             # Optionally, delete the temporary report after appending
             rm "$temp_report"
           done < SecurityTest/src/assets/Zap_urls.txt
-          
-          # Generate the final summary section
-          echo "<h1>Overall Risk Summary</h1>" >> "$report_file"
-          echo "<p>High Risks: $total_high</p>" >> "$report_file"
-          echo "<p>Medium Risks: $total_medium</p>" >> "$report_file"
-          echo "<p>Low Risks: $total_low</p>" >> "$report_file"
-
-      - name: Move ZAP reports to reports directory
-        run: mv zap-report*.html reports/
-
-      - name: List files in reports directory
-        run: ls -la reports/
 
       - name: Upload All ZAP Reports
         uses: actions/upload-artifact@v4
